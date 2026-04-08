@@ -17,6 +17,7 @@ ExaBGP is a BGP implementation designed to enable network engineers and develope
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [Version Notice](#version-notice)
+- [Related Project: Ze](#related-project-ze)
 
 </td>
 <td>
@@ -122,6 +123,20 @@ git checkout 5.0
 ```
 
 See [Version Information](#version-information) for details on differences between versions.
+
+## Related Project: Ze
+
+**[Ze](https://github.com/ze-software/ze)** is a new project by the ExaBGP author, a ground-up rewrite in Go aiming to be a fully programmable network stack for device configuration and network automation. Beyond BGP, Ze manages network interfaces, programs the FIB, and serves a config editor over SSH and a web UI. Everything beyond the core engine is a plugin (Go modules or external processes in any language), and an MCP server lets AI assistants discover and operate its features directly.
+
+**Key points for ExaBGP users:**
+- **Pre-alpha** -- core BGP engine works, but many advanced features are incomplete or untested. APIs and config syntax will change without notice.
+- **ExaBGP bridge** -- existing ExaBGP plugins work unchanged, and `ze config migrate` converts ExaBGP configs.
+- **Feedback wanted** -- if you use ExaBGP, try `ze config migrate` with your configs and share what works and what does not.
+
+**Links:**
+- Official repo: [github.com/ze-software/ze](https://github.com/ze-software/ze)
+- Development: [codeberg.org/thomas-mangin/ze](https://codeberg.org/thomas-mangin/ze)
+- Discord: [discord.gg/ykJb8meS4](https://discord.gg/ykJb8meS4)
 
 ## Installation
 
