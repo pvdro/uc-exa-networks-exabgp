@@ -43,10 +43,12 @@ def inherit(tokeniser: Tokeniser) -> list[str]:
 
 def hostname(tokeniser: Tokeniser) -> str:
     value = string(tokeniser)
+    if not value:
+        raise ValueError('a hostname is required')
     if not value[0].isalnum():
         raise ValueError(f"'{value}' is not a valid hostname\n  Must start with alphanumeric character")
-    if not value[-1].isalnum() or value[-1].isdigit():
-        raise ValueError(f"'{value}' is not a valid hostname\n  Must end with a letter")
+    if not value[-1].isalnum():
+        raise ValueError(f"'{value}' is not a valid hostname\n  Must end with an alphanumeric character")
     if '..' in value:
         raise ValueError(f"'{value}' is not a valid hostname\n  Cannot contain consecutive periods (..)")
     if not all(c in ascii_letters + digits + '.-' for c in value):
@@ -61,10 +63,10 @@ def domainname(tokeniser: Tokeniser) -> str:
     value = string(tokeniser)
     if not value:
         raise ValueError('a domain name is required')
-    if not value[0].isalnum() or value[0].isdigit():
-        raise ValueError(f"'{value}' is not a valid domain name\n  Must start with a letter")
-    if not value[-1].isalnum() or value[-1].isdigit():
-        raise ValueError(f"'{value}' is not a valid domain name\n  Must end with a letter")
+    if not value[0].isalnum():
+        raise ValueError(f"'{value}' is not a valid domain name\n  Must start with an alphanumeric character")
+    if not value[-1].isalnum():
+        raise ValueError(f"'{value}' is not a valid domain name\n  Must end with an alphanumeric character")
     if '..' in value:
         raise ValueError(f"'{value}' is not a valid domain name\n  Cannot contain consecutive periods (..)")
     if not all(c in ascii_letters + digits + '.-' for c in value):
