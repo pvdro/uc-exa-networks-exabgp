@@ -19,4 +19,4 @@ _std: dict[str, Any] = {
 
 
 def istty(std: str) -> bool:
-    return _istty(_std[std])
+    return _istty(_std.get(std, None))
