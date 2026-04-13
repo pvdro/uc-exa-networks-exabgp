@@ -487,8 +487,10 @@ class AttributeCollection(MutableMapping[int, Attribute]):
             # Attributes not in TREAT_AS_WITHDRAW or DISCARD fall through to this log
             # This catches implementation gaps - if this fires, add aid to one of the lists
             log.debug(
-                lambda: 'invalid flag for attribute {} (flag 0x{:02X}, aid 0x{:02X}) unspecified (should not happen)'.format(
-                    Attribute.CODE.names.get(aid, 'unset'), flag, aid
+                lambda: (
+                    'invalid flag for attribute {} (flag 0x{:02X}, aid 0x{:02X}) unspecified (should not happen)'.format(
+                        Attribute.CODE.names.get(aid, 'unset'), flag, aid
+                    )
                 ),
                 'parser',
             )

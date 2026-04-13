@@ -227,8 +227,10 @@ class Outgoing(Connection):
         # Timeout or max attempts reached - connection failed
         elapsed = time.time() - start_time
         log.debug(
-            lambda: '[ASYNC] connection to %s:%d failed after %d attempts (%.1fs elapsed)'
-            % (self.peer, self.port, attempts, elapsed),
+            lambda: (
+                '[ASYNC] connection to %s:%d failed after %d attempts (%.1fs elapsed)'
+                % (self.peer, self.port, attempts, elapsed)
+            ),
             self.session(),
         )
 
