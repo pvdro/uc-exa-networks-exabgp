@@ -121,9 +121,18 @@ class option:
 
         if destination in ('stdout', 'stderr', 'syslog'):
             cls.destination = destination
+        elif destination.startswith('host:'):
+            cls.destination = destination
         elif destination.startswith('file:'):
             cls.destination = destination[5:]
+        elif destination.startswith('/') or destination.startswith('~'):
+            cls.destination = os.path.expanduser(destination)
         else:
+            sys.stderr.write(
+                f'warning: invalid log destination {destination!r}, '
+                f'expected stdout, stderr, syslog, or an absolute file path; '
+                f'falling back to stdout\n'
+            )
             cls.destination = 'stdout'
 
     @classmethod
@@ -157,11 +166,6 @@ class option:
             cls.formater = fmt if fmt else echo
             return
 
-        # if cls.destination == 'file':
-        #     os.path.realpath(os.path.normpath(os.path.join(cls._cwd, destination)))
-        #     _logger = get_logger('ExaBGP file', filename='')
-        #     _format = get_formater(cls.enabled, 'stderr')
-
         if cls.destination == 'syslog':
             cls.logger = get_logger(
                 f'ExaBGP syslog {now}',
@@ -171,5 +175,30 @@ class option:
             )
             fmt = get_formater(env.log.short, 'syslog')
             cls.formater = fmt if fmt else echo
+            return
+
+        # anything else is treated as a file path
+        filename = os.path.realpath(os.path.normpath(os.path.join(cls.cwd, cls.destination)))
+        try:
+            cls.logger = get_logger(
+                f'ExaBGP file {now}',
+                format='%(message)s',
+                filename=filename,
+                level=cls.level,
+            )
+        except OSError as exc:
+            sys.stderr.write(f'warning: could not open log file {filename!r}: {exc}; falling back to stdout\n')
+            cls.destination = 'stdout'
+            cls.logger = get_logger(
+                f'ExaBGP stdout {now}',
+                format='%(message)s',
+                stream=sys.stderr,
+                level=cls.level,
+            )
+            fmt = get_formater(env.log.short, 'stdout')
+            cls.formater = fmt if fmt else echo
+            return
+        fmt = get_formater(env.log.short, 'file')
+        cls.formater = fmt if fmt else echo
 
         # need to re-add remote syslog
