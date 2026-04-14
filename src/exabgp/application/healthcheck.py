@@ -439,8 +439,8 @@ def loop(options: argparse.Namespace) -> None:
             setup_ips(options.ips, options.ip_ifnames, options.label, options.label_exact_match, options.sudo)
 
         logger.info(f'send announces for {target} state to ExaBGP')
-        metric = vars(options).get(f'{str(target).lower()}_metric', 0)
-        as_path = vars(options).get(f'{str(target).lower()}_as_path', None)
+        metric = vars(options).get(f'{target.value.lower()}_metric', 0)
+        as_path = vars(options).get(f'{target.value.lower()}_as_path', None)
         if as_path is None:
             as_path = options.as_path
         if options.neighbors and not any(n == '*' for n in options.neighbors):
@@ -512,12 +512,12 @@ def loop(options: argparse.Namespace) -> None:
         # Log and execute commands
         logger.debug(f'Transition to {target}')
         cmds: list[str] = []
-        cmds.extend(vars(options).get(f'{str(target).lower()}_execute', []) or [])
+        cmds.extend(vars(options).get(f'{target.value.lower()}_execute', []) or [])
         cmds.extend(vars(options).get('execute', []) or [])
         for cmd in cmds:
             logger.debug(f'Transition to {target}, execute `{cmd}`')
             env = os.environ.copy()
-            env.update({'STATE': str(target)})
+            env.update({'STATE': target.value})
             with open(os.devnull, 'w') as fnull:
                 subprocess.call(cmd, shell=True, stdout=fnull, stderr=fnull, env=env)
 
